@@ -1,0 +1,116 @@
+import React, { Component } from 'react';
+
+import {
+  AppRegistry,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput
+} from 'react-native';
+
+import {Client, Server} from './udp';
+
+class UdpProject extends Component {
+  constructor(props) {
+    super(props);
+
+    const udpClient = new Client();
+    const udpServer = new Server(this.onMessageReceived);
+
+    this.onMessageReceived = this.onMessageReceived.bind(this);
+    this.state = {server: udpServer, client: udpClient, text: '', statusText: 'ko', buttonText: 'Démarrer le diapo\''};
+
+    this.state.server.listen()
+  }
+
+  toggleSlideshow() {
+    if (this.state.statusText === 'ko') {
+      this.state.client.sendUdpPacket("start;" + this.state.text, this.getStatus());
+      this.setState({ statusText: 'ok'});
+      this.setState({ buttonText: 'Arrêter le diapo\''});
+    } else {
+      this.state.client.sendUdpPacket("stop; ", this.getStatus())
+      this.setState({ statusText: 'ko'});
+      this.setState({ buttonText: 'Démarrer le diapo\''});
+    }
+  }
+
+  getStatus(err) {
+    if (err) throw err
+    this.setState({statusText: "Le diapo tourne"});
+    //self.updateChatter('a sent data')
+  }
+
+  onMessageReceived(message) {
+    this.setState({statusText: message + " - AHAH"});
+  }
+
+  componentDidMount() {
+
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+      <TextInput
+      autoCapitalize="none"
+      placeholder="Nom du dossier contenant les photo"
+      autoCorrect={false}
+      style={styles.input}
+      onChangeText={(text) => this.setState({text})}
+      value={this.state.text}
+      />
+      <Button
+      onPress={ () => this.toggleSlideshow()}
+      title={this.state.buttonText}
+      accessibilityLabel="Lancer le diaporama"
+      />
+      <Text style={this.state.statusText === 'ok' ? styles.statusRunningText : styles.statusNotRunningText}>
+      {this.state.statusText}
+      </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  input: {
+    height: 300,
+    marginLeft: 10,
+    marginRight: 10,
+    textAlign: 'center',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+  },
+  statusNotRunningText: {
+    height: 100,
+    color: 'red',
+    marginBottom: 15,
+  },
+  statusRunningText: {
+    height: 100,
+    color: 'green',
+    marginBottom: 15,
+  }
+});
+
+export default UdpProject;
