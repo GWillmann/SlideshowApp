@@ -2,7 +2,7 @@
 
 ## Made with <3 with a Raspberry Pi 3
 
-[INSERT VIDEO/PICTURE HERE]
+![Banner](https://cdn-images-1.medium.com/max/1600/1*S1oN3nUjgGENLyxTuKrAnQ.png)
 
 ### Introduction
 
@@ -10,7 +10,7 @@ I have made a digital photo frame as a side project.
 @See details [here](https://medium.com/@Gr3g0ire/un-cadre-photo-digital-19aee3bfddbc) (sorry in French for now) 
 To simplify the control of the slideshow, I have written a quick app with React Native.
 
-The server repo is ==> https://github.com/GWillmann/SlideshowUDPServer
+The server repo is ==> https://github.com/GWillmann/SlideshowUDPServer  
 The app repo is => https://github.com/GWillmann/SlideshowApp
 
 
