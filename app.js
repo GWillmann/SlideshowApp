@@ -36,8 +36,6 @@ class MainScreen extends Component {
 
     this.state.server.listen(this.onMessageReceived)
     udpClient.findUdpServer("whois;");
-    udpClient.sendUdpPacket("listfolders;");
-    udpClient.sendUdpPacket("getstatus;");
   }
 
   toggleSlideshow() {
@@ -58,7 +56,7 @@ class MainScreen extends Component {
     //self.updateChatter('a sent data')
   }
 
-  onMessageReceived(message) {
+  onMessageReceived(message, rinfo) {
     let self = this;
     let action = message.split(';')[0];
     let param = message.split(';')[1];
@@ -66,7 +64,11 @@ class MainScreen extends Component {
       self.setState({dataSource: self.state.dataSource.cloneWithRows(JSON.parse(param))}); 
     } else if (action === 'slideshowstatus') {
         self.setState({statusText: param === 'True' ? "running" : "ko", buttonDisabled: param === 'True' ? false : true, buttonText: param === 'True' ? 'Arrêter le diapo\'' : 'Démarrer le diapo\''});
-    }else {
+    } else if (action === 'iam') {
+        self.state.client.setServerAddress(rinfo.address);
+        self.state.client.sendUdpPacket("listfolders;");
+        self.state.client.sendUdpPacket("getstatus;");
+    } else {
       self.setState({statusText: param});
     }
   }

@@ -18,12 +18,15 @@ export class Client {
     this.socket = dgram.createSocket('udp4');
     this.socket.bind(10000, function() {
       self.socket.setBroadcast(true);
-//    self.findUdpServer('whois;');
+      self.findUdpServer('whois;');
     });
-    this.ADDR = '192.168.1.103';
-    //this.ADDR = '127.0.0.1';
+    
     this.CLIENT_PORT = 10000;
   };
+
+  setServerAddress(address) {
+    this.ADDR = address;
+  }
 
   findUdpServer(text, callback) {
     let self = this;
@@ -53,7 +56,7 @@ export class Server {
   listen(callback) {
     this.socket.on('message', function(data, rinfo) {
       var str = String.fromCharCode.apply(null, new Uint8Array(data));
-      callback(str);
+      callback(str, rinfo);
     })
   }
 }
